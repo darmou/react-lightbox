@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/darmou/react-lightbox",
   "peerDependencies": {
-    "react": "^15.3.1"
+    "react": "^15.2.1 |^15.3.1"
   },
   "devDependencies": {
     "webpack": "^1.7.3",
