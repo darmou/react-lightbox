@@ -1,4 +1,5 @@
 var React = require('react');
+var ReactDOM = require('react-dom');
 var DOM = React.DOM;
 
 var Carousel = React.createFactory(React.createClass({
@@ -30,7 +31,11 @@ var Carousel = React.createFactory(React.createClass({
     }
   },
   getNextIndex: function () {
-    return this.props.pictures.length === this.state.current + 1 ? 0 : this.state.current + 1;
+    if(this.props.pictures.length == 0) {
+      return 0;
+    } else {
+      return this.props.pictures.length === this.state.current + 1 ? 0 : this.state.current + 1;
+    }
   },
   getPreviousIndex: function () {
     return this.state.current === 0 ? this.props.pictures.length - 1 : this.state.current - 1;
@@ -44,7 +49,7 @@ var Carousel = React.createFactory(React.createClass({
       current: this.getNextIndex()
     });
   },
-  backward: function (event) {
+  backward: function () {
     if (event) {
       event.stopPropagation();
     }
@@ -58,12 +63,14 @@ var Carousel = React.createFactory(React.createClass({
   },
   createInitialPictureClass: function (index) {
     var className = 'react-lightbox-carousel-image';
-    if (index === this.getPreviousIndex()) {
-      return className += ' react-lightbox-carousel-image-backward';
-    }
     if (index === this.state.current) {
       return className;
     }
+
+    if (index === this.getPreviousIndex()) {
+      return className += ' react-lightbox-carousel-image-backward';
+    }
+
     if (index === this.getNextIndex()) {
       return className += ' react-lightbox-carousel-image-forward';
     }
@@ -97,6 +104,7 @@ var Carousel = React.createFactory(React.createClass({
   },
   renderPictures: function () {
     return this.props.pictures.map(function (picture, index) {
+
 
       if (typeof picture === 'string') {
         return DOM.div({
@@ -144,7 +152,7 @@ var Lightbox = React.createClass({
   },
   handleOverlayMounting: function () {
     if (!this.overlay.classList.contains('react-lightbox-overlay-open')) {
-      React.unmountComponentAtNode(this.overlay);
+      ReactDOM.unmountComponentAtNode(this.overlay);
       document.body.removeChild(this.overlay);
       window.removeEventListener('click', this.closeCarousel);
     }
@@ -153,7 +161,7 @@ var Lightbox = React.createClass({
     this.overlay.innerHMTL = '';
     this.overlay.className = 'react-lightbox-overlay';
     document.body.appendChild(this.overlay);
-    React.render(Carousel({
+    ReactDOM.render(Carousel({
       pictures: this.props.pictures,
       current: index,
       keyboard: this.props.keyboard,
